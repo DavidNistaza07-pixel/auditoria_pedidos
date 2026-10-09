@@ -1,0 +1,105 @@
+"""Registro de pedidos - versión mejorada (con validaciones preventivas)."""
+
+
+def pedir_producto():
+    """Pide el nombre del producto hasta que no esté vacío."""
+    while True:
+        producto = input("Nombre del producto: ").strip()
+        if producto == "":
+            print("Error: el nombre del producto no puede estar vacío.")
+        else:
+            return producto
+
+
+def pedir_cantidad():
+    """Pide la cantidad: número entero mayor que cero."""
+    while True:
+        try:
+            cantidad = int(input("Cantidad solicitada: "))
+        except ValueError:
+            print("Error: ingrese un número entero (ejemplo: 2).")
+            continue
+        if cantidad <= 0:
+            print("Error: la cantidad debe ser mayor que cero.")
+        else:
+            return cantidad
+
+
+def pedir_precio():
+    """Pide el precio unitario: número mayor que cero."""
+    while True:
+        try:
+            precio = float(input("Precio unitario: "))
+        except ValueError:
+            print("Error: ingrese un número (ejemplo: 10.50).")
+            continue
+        if precio <= 0:
+            print("Error: el precio debe ser mayor que cero.")
+        else:
+            return precio
+
+
+def pedir_descuento():
+    """Pide el descuento: número entre 0 y 100."""
+    while True:
+        try:
+            descuento = float(input("Porcentaje de descuento (0 a 100): "))
+        except ValueError:
+            print("Error: ingrese un número (ejemplo: 10).")
+            continue
+        if descuento < 0 or descuento > 100:
+            print("Error: el descuento debe estar entre 0 y 100.")
+        else:
+            return descuento
+
+
+def pedir_confirmacion():
+    """Pide confirmar (1) o cancelar (2) hasta recibir una opción válida."""
+    while True:
+        print("¿Desea confirmar el pedido?")
+        print("1. Sí")
+        print("2. No")
+        opcion = input("Opción: ").strip()
+        if opcion in ("1", "2"):
+            return opcion
+        print("Error: opción inválida. Ingrese 1 o 2.")
+
+
+def datos_validos(producto, cantidad, precio, descuento):
+    """Verificación final antes de calcular y confirmar."""
+    return (
+        producto != ""
+        and cantidad > 0
+        and precio > 0
+        and 0 <= descuento <= 100
+    )
+
+
+def main():
+    print("=== REGISTRO DE PEDIDOS ===")
+
+    producto = pedir_producto()
+    cantidad = pedir_cantidad()
+    precio = pedir_precio()
+    descuento = pedir_descuento()
+
+    if datos_validos(producto, cantidad, precio, descuento):
+        total = cantidad * precio
+        total = total - (total * descuento / 100)
+
+        print("Producto:", producto)
+        print("Cantidad:", cantidad)
+        print("Total a pagar:", total)
+
+        if pedir_confirmacion() == "1":
+            print("Pedido confirmado.")
+        else:
+            print("Pedido cancelado.")
+    else:
+        print("Pedido no confirmado: existen datos inválidos.")
+
+    print("Proceso finalizado.")
+
+
+if __name__ == "__main__":
+    main()
